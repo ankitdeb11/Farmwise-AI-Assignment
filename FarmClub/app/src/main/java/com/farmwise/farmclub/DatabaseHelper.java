@@ -2,8 +2,12 @@ package com.farmwise.farmclub;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -63,4 +67,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
         return result;
     }
+
+
+
+
+    public ArrayList<Farmer> getAllFarmersData() {
+        ArrayList<Farmer> farmersList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns you want to retrieve
+        String[] columns = {COLUMN_ID, COLUMN_NAME, COLUMN_ADDRESS, COLUMN_DOB, COLUMN_GENDER, COLUMN_LAND_AREA};
+
+        Cursor cursor = db.query(TABLE_FARMERS, columns, null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Retrieve column indices
+                int nameIndex = cursor.getColumnIndex(COLUMN_NAME);
+                int addressIndex = cursor.getColumnIndex(COLUMN_ADDRESS);
+                int dobIndex = cursor.getColumnIndex(COLUMN_DOB);
+                int genderIndex = cursor.getColumnIndex(COLUMN_GENDER);
+                int landAreaIndex = cursor.getColumnIndex(COLUMN_LAND_AREA);
+
+                // Declare variables outside the if blocks
+                String name = "";
+                String address = "";
+                String dob = "";
+                String gender = "";
+                String landArea = "";
+
+                // Check if column indices are valid
+                if (nameIndex >= 0) {
+                    name = cursor.getString(nameIndex);
+                    // Do something with the 'name' value
+                    Log.d("FarmerData", "Name: " + name);
+                }
+
+                if (addressIndex >= 0) {
+                    address = cursor.getString(addressIndex);
+                    // Do something with the 'address' value
+                    Log.d("FarmerData", "Address: " + address);
+                }
+
+                if (dobIndex >= 0) {
+                    dob = cursor.getString(dobIndex);
+                    // Do something with the 'dob' value
+                    Log.d("FarmerData", "DOB: " + dob);
+                }
+
+                if (genderIndex >= 0) {
+                    gender = cursor.getString(genderIndex);
+                    // Do something with the 'gender' value
+                    Log.d("FarmerData", "Gender: " + gender);
+                }
+
+                if (landAreaIndex >= 0) {
+                    landArea = cursor.getString(landAreaIndex);
+                    // Do something with the 'landArea' value
+                    Log.d("FarmerData", "Land Area: " + landArea);
+                }
+
+                // Create a Farmer object and add it to the list
+                Farmer farmer = new Farmer(0, name, address, dob, gender, landArea);
+                farmersList.add(farmer);
+
+            } while (cursor.moveToNext());
+
+            // Close the cursor
+            cursor.close();
+        }
+
+        // Close the database
+        db.close();
+
+        return farmersList;
+    }
+
 }
