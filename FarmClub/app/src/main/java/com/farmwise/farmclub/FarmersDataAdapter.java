@@ -28,11 +28,11 @@ public class FarmersDataAdapter extends RecyclerView.Adapter<FarmersDataAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Farmer farmer = farmersList.get(position);
 
-        holder.txtName.setText(farmer.getName());
-        holder.txtAddress.setText(farmer.getAddress());
-        holder.txtDob.setText(farmer.getDob());
-        holder.txtGender.setText(farmer.getGender());
-        holder.txtLandArea.setText(farmer.getLandArea());
+        holder.txtName.setText("Farmer's Name: " + farmer.getName());
+        holder.txtAddress.setText("Address: "+farmer.getAddress());
+        holder.txtDob.setText("Date of Birth: "+farmer.getDob());
+        holder.txtGender.setText("Gender: "+farmer.getGender());
+        holder.txtLandArea.setText("Land in Acres: "+farmer.getLandArea());
 
 
 
