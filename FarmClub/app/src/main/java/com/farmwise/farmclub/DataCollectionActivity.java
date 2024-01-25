@@ -15,6 +15,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,6 +48,8 @@ public class DataCollectionActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 3;
 
     private static final int REQUEST_VIDEO_CAPTURE = 4;
+
+    DatabaseHelper dbHelper;
     String currentPhotoPath;
 
     String[] genderOptions = {"Male", "Female", "Other"};
@@ -76,6 +79,10 @@ public class DataCollectionActivity extends AppCompatActivity {
         //accessing for image and video
         imageViewCapturedImage = findViewById(R.id.imageViewCapturedImage);
         videoViewCapturedVideo = findViewById(R.id.videoViewCapturedVideo);
+
+
+        //accessing dbHelper
+        dbHelper = new DatabaseHelper(this);
 
 
 
@@ -233,15 +240,26 @@ public class DataCollectionActivity extends AppCompatActivity {
 
     public void saveFarmerData(View view) {
         if (validateFields()) {
-            // Implement logic to save farmer data
-            // Access the fields using editTextFarmerName.getText().toString(), etc.
-            // Save to your local database or preferred storage method
+            // Accessing UI components from XML file
+            String farmerName = editTextFarmerName.getText().toString().trim();
+            String address = editTextAddress.getText().toString().trim();
+            String dob = editTextDOB.getText().toString().trim();
+            String gender = spinnerGender.getSelectedItem().toString();
+            String landArea = editTextLandArea.getText().toString().trim();
 
-            Toast.makeText(this, "Farmer data submitted!", Toast.LENGTH_SHORT).show();
+            // Saving data to SQLite database
+            long result = dbHelper.insertFarmerData(farmerName, address, dob, gender, landArea);
+
+            if (result != -1) {
+                Toast.makeText(this, "Farmer data submitted!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error saving data. Please try again.", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -281,13 +299,26 @@ public class DataCollectionActivity extends AppCompatActivity {
                             photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    // Log an error if the file creation failed
+                    Log.e("CaptureImage", "Error creating image file");
+                    Toast.makeText(this, "Error capturing image. Please try again.", Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
-                e.printStackTrace(); // Handle the exception according to your needs
+                // Log and handle the exception
+                e.printStackTrace();
+                Toast.makeText(this, "Error capturing image. Please try again.", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                // Log and handle other exceptions
+                e.printStackTrace();
+                Toast.makeText(this, "Error capturing image. Please try again.", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            // Log an error if no camera app is available
+            Log.e("CaptureImage", "No camera app available");
+            Toast.makeText(this, "No camera app available", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -323,12 +354,22 @@ public class DataCollectionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Handle image capture result
-            Uri imageUri = data.getData();
-            imageViewCapturedImage.setVisibility(View.VISIBLE);
-            imageViewCapturedImage.setImageURI(imageUri);
-            Toast.makeText(this, "Image captured!", Toast.LENGTH_SHORT).show();
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                // Handle image capture result
+                if (currentPhotoPath != null) {
+                    // Display the captured image using the file path
+                    imageViewCapturedImage.setVisibility(View.VISIBLE);
+                    imageViewCapturedImage.setImageURI(Uri.parse(currentPhotoPath));
+                    Toast.makeText(this, "Image captured!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Error retrieving image", Toast.LENGTH_SHORT).show();
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Image capture canceled", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Image capture failed", Toast.LENGTH_SHORT).show();
+            }
         } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             // Handle video capture result
             Uri videoUri = data.getData();
