@@ -33,6 +33,12 @@ public class FarmersDataAdapter extends RecyclerView.Adapter<FarmersDataAdapter.
         holder.txtDob.setText(farmer.getDob());
         holder.txtGender.setText(farmer.getGender());
         holder.txtLandArea.setText(farmer.getLandArea());
+
+
+
+        //update farmer class as well
+        holder.txtLatitude.setText("Latitude: " + farmer.getLatitude());
+        holder.txtLongitude.setText("Longitude: " + farmer.getLongitude());
     }
 
     @Override
@@ -41,7 +47,7 @@ public class FarmersDataAdapter extends RecyclerView.Adapter<FarmersDataAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtName, txtAddress, txtDob, txtGender, txtLandArea;
+        TextView txtName, txtAddress, txtDob, txtGender, txtLandArea, txtLatitude, txtLongitude;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,6 +57,8 @@ public class FarmersDataAdapter extends RecyclerView.Adapter<FarmersDataAdapter.
             txtDob = itemView.findViewById(R.id.txtDob);
             txtGender = itemView.findViewById(R.id.txtGender);
             txtLandArea = itemView.findViewById(R.id.txtLandArea);
+            txtLatitude = itemView.findViewById(R.id.txtLatitude);
+            txtLongitude = itemView.findViewById(R.id.txtLongitude);
         }
     }
 }

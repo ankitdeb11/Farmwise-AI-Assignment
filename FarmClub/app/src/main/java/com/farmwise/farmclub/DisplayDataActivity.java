@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,19 @@ public class DisplayDataActivity extends AppCompatActivity {private RecyclerView
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
+
+
+        //LAT AND LONG
+        double latitude = getIntent().getDoubleExtra("LATITUDE", 0.0);
+        double longitude = getIntent().getDoubleExtra("LONGITUDE", 0.0);
+
+
+        TextView txtLatitude = findViewById(R.id.txtLatitude);
+        TextView txtLongitude = findViewById(R.id.txtLongitude);
+
+        txtLatitude.setText("Latitude: " + latitude);
+        txtLongitude.setText("Longitude: " + longitude);
+
 
         recyclerViewFarmersData = findViewById(R.id.recyclerViewFarmersData);
         dbHelper = new DatabaseHelper(this);

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#8ED562"
     android:padding="16dp">
 
     <!-- Add a RecyclerView to display the data -->
@@ -14,7 +14,34 @@
         android:layout_above="@+id/btnGoBack"
         android:layout_marginBottom="16dp" />
 
-    <Button
+
+    <TextView
+        android:id="@+id/txtLatitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:textColor="#000"
+        android:layout_below="@id/recyclerViewFarmersData"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txtLongitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:textColor="#000"
+        android:layout_below="@id/txtLatitude"
+        android:layout_centerHorizontal="true" />
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGoBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,5 +54,6 @@
         android:textSize="15sp"
         android:fontFamily="@font/lemon_milk_regular"
         android:onClick="goBack" />
+
 
 </RelativeLayout>

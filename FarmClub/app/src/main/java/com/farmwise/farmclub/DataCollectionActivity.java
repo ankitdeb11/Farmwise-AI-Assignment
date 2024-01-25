@@ -74,6 +74,10 @@ public class DataCollectionActivity extends AppCompatActivity {
     ImageView imageViewCapturedImage;
     VideoView videoViewCapturedVideo;
 
+    //LAT AND LONG
+    private double latitude;
+    private double longitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,11 +237,17 @@ public class DataCollectionActivity extends AppCompatActivity {
             String gender = spinnerGender.getSelectedItem().toString();
             String landArea = editTextLandArea.getText().toString().trim();
 
-            // Saving data to SQLite database
-            long result = dbHelper.insertFarmerData(farmerName, address, dob, gender, landArea);
+            // Saving data to SQLite database with latitude and longitude
+            long result = dbHelper.insertFarmerData(farmerName, address, dob, gender, landArea, latitude, longitude);
 
             if (result != -1) {
                 Toast.makeText(this, "Farmer data submitted!", Toast.LENGTH_SHORT).show();
+
+                // Pass latitude and longitude to DisplayDataActivity
+                Intent displayDataIntent = new Intent(this, DisplayDataActivity.class);
+                displayDataIntent.putExtra("LATITUDE", latitude);
+                displayDataIntent.putExtra("LONGITUDE", longitude);
+                startActivity(displayDataIntent);
             } else {
                 Toast.makeText(this, "Error saving data. Please try again.", Toast.LENGTH_SHORT).show();
             }
