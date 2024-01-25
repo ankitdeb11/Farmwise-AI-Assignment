@@ -193,12 +193,42 @@ public class DataCollectionActivity extends AppCompatActivity {
         String landArea = editTextLandArea.getText().toString().trim();
         String selectedGender = spinnerGender.getSelectedItem().toString();
 
-        
+
+        //validating farmer name
+        if(farmerName.isEmpty()){
+            editTextFarmerName.setError("Farmer name is required");
+            return false;
+        }
+
+        //validating address
+        if(address.isEmpty()){
+            editTextAddress.setError("Address is required");
+            return false;
+        }
+
+        if(dob.isEmpty()){
+            editTextDOB.setError("Date of Birth is required");
+            return false;
+        }
+
+        //date format validation but no time
+
+
+        //validating gender
+
+
+        //validating land area
+        if(landArea.isEmpty()){
+            editTextLandArea.setError("Land Area is required");
+            return false;
+        }
 
 
 
 
-        return true;  // Return false if validation fails
+
+
+        return true;  // if all validations work well
     }
 
     public void saveFarmerData(View view) {
