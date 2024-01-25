@@ -11,6 +11,14 @@ import java.util.Date;
 import java.util.Locale;
 
 
+//for camera intent
+import android.os.Looper;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.Manifest;
@@ -37,8 +45,8 @@ import java.util.Locale;
 import androidx.core.content.FileProvider;
 
 
-// Implement permissions request logic
-// Implement UI logic to collect farmer data
+// log for implementing permissions request logic
+// log for implementing UI logic to collect farmer data
 
 public class DataCollectionActivity extends AppCompatActivity {
 
@@ -48,9 +56,14 @@ public class DataCollectionActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 3;
 
     private static final int REQUEST_VIDEO_CAPTURE = 4;
+    private static final int REQUEST_PICK_IMAGE = 5;
 
     DatabaseHelper dbHelper;
     String currentPhotoPath;
+
+    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationCallback locationCallback;
+
 
     String[] genderOptions = {"Male", "Female", "Other"};
 
@@ -85,6 +98,15 @@ public class DataCollectionActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
 
 
+        //for location access attributes
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                // Handle location updates here
+            }
+        };
+
 
         // setting up gender spinner
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, genderOptions);
@@ -108,40 +130,6 @@ public class DataCollectionActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -233,8 +221,6 @@ public class DataCollectionActivity extends AppCompatActivity {
 
 
 
-
-
         return true;  // if all validations work well
     }
 
@@ -265,14 +251,27 @@ public class DataCollectionActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        // Handle permission request results
+        // for handling permission request results
         if (requestCode == PERMISSION_REQUEST_CODE) {
             // Handle camera and storage permissions
-            // ...
+
+
+            // Handle camera and storage permissions
+            if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                // Both camera and storage permissions are granted
+                // You can start the camera or gallery intent here
+                startCameraIntent();
+            } else {
+                Toast.makeText(this, "Camera or storage permission denied. Cannot capture images or videos.", Toast.LENGTH_SHORT).show();
+            }
+
+
         } else if (requestCode == REQUEST_LOCATION_PERMISSION) {
             // Handle location permission
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Start location updates
+                startLocationUpdates();
                 // ...
             } else {
                 Toast.makeText(this, "Location permission denied. Location capturing disabled.", Toast.LENGTH_SHORT).show();
@@ -282,8 +281,62 @@ public class DataCollectionActivity extends AppCompatActivity {
 
 
 
+    //helper methods for Camera Intent
+    private void startCameraIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                // Specify a file where the camera app should save the image
+                File photoFile = createImageFile();
+                if (photoFile != null) {
+                    Uri photoUri = FileProvider.getUriForFile(this,
+                            "com.farmwise.farmclub.fileprovider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    // Log an error if the file creation failed
+                    Log.e("CaptureImage", "Error creating image file");
+                    Toast.makeText(this, "Error capturing image. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                // Log and handle the exception
+                e.printStackTrace();
+                Toast.makeText(this, "Error capturing image. Please try again.", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                // Log and handle other exceptions
+                e.printStackTrace();
+                Toast.makeText(this, "Error capturing image. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Log an error if no camera app is available
+            Log.e("CaptureImage", "No camera app available");
+            Toast.makeText(this, "No camera app available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void startLocationUpdates() {
+        // Check if location permissions are granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Initialize location updates using FusedLocationProviderClient
+            FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            fusedLocationClient.requestLocationUpdates(createLocationRequest(), locationCallback, Looper.getMainLooper());
+        } else {
+            Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
+
+    //method for creating a location request
+    private LocationRequest createLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000); // Update interval in milliseconds
+        locationRequest.setFastestInterval(5000); // Fastest update interval in milliseconds
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return locationRequest;
+    }
 
 
     //logic for capturing image and video below

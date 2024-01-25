@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "FarmersDatabase";
     private static final int DATABASE_VERSION = 1;
 
-    // Define your table and columns
+    // defining table and columns
     private static final String TABLE_FARMERS = "farmers";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_GENDER = "gender";
     private static final String COLUMN_LAND_AREA = "land_area";
 
-    // Create table query
+    // creating table query
     private static final String CREATE_TABLE_FARMERS = "CREATE TABLE " + TABLE_FARMERS + " (" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_NAME + " TEXT, " +
@@ -38,13 +38,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create the table
+        // creating the table
         db.execSQL(CREATE_TABLE_FARMERS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Handle database upgrade if needed
+        // extra function for handling database upgrade if needed
     }
 
 
@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_GENDER, gender);
         values.put(COLUMN_LAND_AREA, landArea);
 
-        // Inserting Row
+        // inserting Row data
         long result = db.insert(TABLE_FARMERS, null, values);
         db.close(); // Closing database connection
         return result;
@@ -75,69 +75,66 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Farmer> farmersList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // Define the columns you want to retrieve
+        // defining the columns we want to retrieve
         String[] columns = {COLUMN_ID, COLUMN_NAME, COLUMN_ADDRESS, COLUMN_DOB, COLUMN_GENDER, COLUMN_LAND_AREA};
 
         Cursor cursor = db.query(TABLE_FARMERS, columns, null, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                // Retrieve column indices
+                // retrieving column indices
                 int nameIndex = cursor.getColumnIndex(COLUMN_NAME);
                 int addressIndex = cursor.getColumnIndex(COLUMN_ADDRESS);
                 int dobIndex = cursor.getColumnIndex(COLUMN_DOB);
                 int genderIndex = cursor.getColumnIndex(COLUMN_GENDER);
                 int landAreaIndex = cursor.getColumnIndex(COLUMN_LAND_AREA);
 
-                // Declare variables outside the if blocks
+                // declaring variables outside the if blocks
                 String name = "";
                 String address = "";
                 String dob = "";
                 String gender = "";
                 String landArea = "";
 
-                // Check if column indices are valid
+                // checking if column indices are valid
                 if (nameIndex >= 0) {
                     name = cursor.getString(nameIndex);
-                    // Do something with the 'name' value
                     Log.d("FarmerData", "Name: " + name);
                 }
 
                 if (addressIndex >= 0) {
                     address = cursor.getString(addressIndex);
-                    // Do something with the 'address' value
                     Log.d("FarmerData", "Address: " + address);
                 }
 
                 if (dobIndex >= 0) {
                     dob = cursor.getString(dobIndex);
-                    // Do something with the 'dob' value
                     Log.d("FarmerData", "DOB: " + dob);
                 }
 
                 if (genderIndex >= 0) {
                     gender = cursor.getString(genderIndex);
-                    // Do something with the 'gender' value
+
                     Log.d("FarmerData", "Gender: " + gender);
                 }
 
                 if (landAreaIndex >= 0) {
                     landArea = cursor.getString(landAreaIndex);
-                    // Do something with the 'landArea' value
+
                     Log.d("FarmerData", "Land Area: " + landArea);
                 }
 
-                // Create a Farmer object and add it to the list
+                // creating a Farmer object and adding it to the list
                 Farmer farmer = new Farmer(0, name, address, dob, gender, landArea);
                 farmersList.add(farmer);
 
             } while (cursor.moveToNext());
 
-            // Close the cursor
+
             cursor.close();
         }
 
-        // Close the database
+        // closing the database
         db.close();
 
         return farmersList;

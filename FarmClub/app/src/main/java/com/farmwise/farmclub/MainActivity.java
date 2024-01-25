@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         btnDataCollect = findViewById(R.id.btnDataCollect);
         btnDisplayData = findViewById(R.id.btnDisplayData);
 
+
+        //intent for starting Screen 1
         btnDataCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+        //intent for starting Screen 2
         btnDisplayData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
