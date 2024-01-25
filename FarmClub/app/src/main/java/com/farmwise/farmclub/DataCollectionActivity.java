@@ -2,6 +2,14 @@ package com.farmwise.farmclub;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Environment;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -17,10 +25,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.widget.ImageView;
+import android.widget.VideoView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import androidx.core.content.FileProvider;
 
 
 // Implement permissions request logic
@@ -33,10 +46,17 @@ public class DataCollectionActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 3;
 
+    private static final int REQUEST_VIDEO_CAPTURE = 4;
+    String currentPhotoPath;
+
     String[] genderOptions = {"Male", "Female", "Other"};
 
     EditText editTextFarmerName, editTextAddress, editTextDOB, editTextLandArea;
     Spinner spinnerGender;
+
+    //for Image and Video
+    ImageView imageViewCapturedImage;
+    VideoView videoViewCapturedVideo;
 
 
     @Override
@@ -52,6 +72,10 @@ public class DataCollectionActivity extends AppCompatActivity {
         editTextDOB = findViewById(R.id.editTextDOB);
         editTextLandArea = findViewById(R.id.editTextLandArea);
         spinnerGender = findViewById(R.id.spinnerGender);
+
+        //accessing for image and video
+        imageViewCapturedImage = findViewById(R.id.imageViewCapturedImage);
+        videoViewCapturedVideo = findViewById(R.id.videoViewCapturedVideo);
 
 
 
@@ -161,7 +185,19 @@ public class DataCollectionActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
     private boolean validateFields() {
-        // Implement your validation logic
+        // implementing validation logics below
+
+        String farmerName = editTextFarmerName.getText().toString().trim();
+        String address = editTextAddress.getText().toString().trim();
+        String dob = editTextDOB.getText().toString().trim();
+        String landArea = editTextLandArea.getText().toString().trim();
+        String selectedGender = spinnerGender.getSelectedItem().toString();
+
+        
+
+
+
+
         return true;  // Return false if validation fails
     }
 
@@ -196,4 +232,80 @@ public class DataCollectionActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
+
+    //logic for capturing image and video below
+    public void captureImage(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                // Specify a file where the camera app should save the image
+                File photoFile = createImageFile();
+                if (photoFile != null) {
+                    Uri photoUri = FileProvider.getUriForFile(this,
+                            "com.farmwise.farmclub.fileprovider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception according to your needs
+            }
+        }
+    }
+
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+
+        // Get the directory for the user's public pictures directory.
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        // Create the File object for the image
+        File imageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file path for use with ACTION_VIEW intents
+        currentPhotoPath = imageFile.getAbsolutePath();
+
+        return imageFile;
+    }
+
+    public void captureVideo(View view) {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            // Limit video recording to 30 seconds
+            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30);
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Handle image capture result
+            Uri imageUri = data.getData();
+            imageViewCapturedImage.setVisibility(View.VISIBLE);
+            imageViewCapturedImage.setImageURI(imageUri);
+            Toast.makeText(this, "Image captured!", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            // Handle video capture result
+            Uri videoUri = data.getData();
+            videoViewCapturedVideo.setVisibility(View.VISIBLE);
+            videoViewCapturedVideo.setVideoURI(videoUri);
+            videoViewCapturedVideo.start();
+            Toast.makeText(this, "Video captured!", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

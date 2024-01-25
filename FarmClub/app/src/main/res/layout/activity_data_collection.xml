@@ -42,11 +42,24 @@
         android:focusable="false" />  <!-- Prevents direct editing -->
     <!--    android:onClick="showDatePickerDialog"/> &lt;!&ndash; Click to show date picker &ndash;&gt;-->
 
+
+    <TextView
+        android:id="@+id/textViewGenderLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:layout_marginLeft="5dp"
+        android:textSize="20sp"
+        android:layout_below="@+id/editTextDOB"
+        android:layout_marginBottom="8dp"
+        android:textColor="#A6A6A6" />
+
     <Spinner
         android:id="@+id/spinnerGender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextDOB"
+        android:autofillHints="gender"
+        android:layout_below="@+id/textViewGenderLabel"
         android:layout_marginBottom="16dp"/>
     <!-- Populate the spinner with gender options dynamically in your Activity -->
 
@@ -64,6 +77,64 @@
 
     <!-- Add location, camera, and storage permission request logic in DataCollectionActivity -->
 
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:id="@+id/btnCaptureImage"
+        android:layout_height="wrap_content"
+        android:text="Capture Image"
+        android:fontFamily="@font/lemon_milk_regular"
+        android:textSize="15sp"
+        android:layout_below="@id/editTextLandArea"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_capture"
+        android:textColor="#fff"
+        android:onClick="captureImage" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:id="@+id/btnCaptureVideo"
+        android:layout_height="wrap_content"
+        android:text="Capture Video"
+        android:layout_below="@id/btnCaptureImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/lemon_milk_regular"
+        android:textSize="15sp"
+        android:background="@drawable/btn_capture"
+        android:textColor="#fff"
+        android:onClick="captureVideo" />
+    
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="Placeholder image for captured image"
+        android:id="@+id/imageViewCapturedImage"
+        android:layout_below="@id/btnCaptureVideo"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:src="@drawable/farmwise_logo"
+        />
+
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/videoViewCapturedVideo"
+        android:contentDescription="videoView of Captured Video"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/imageViewCapturedImage"
+        android:visibility="gone"
+        />
+
+
+
+
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
@@ -73,7 +144,7 @@
         android:fontFamily="@font/lemon_milk_regular"
         android:textColor="@color/white"
         android:background="@drawable/btn_submit_data_collection"
-        android:layout_below="@+id/editTextLandArea"
+        android:layout_below="@+id/imageViewCapturedImage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:onClick="saveFarmerData"/> <!-- Click to trigger data saving -->
