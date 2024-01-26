@@ -39,6 +39,39 @@
         android:layout_below="@id/txtLatitude"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:id="@+id/txtImageFilePath1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:textColor="#000"
+        android:layout_below="@id/txtLongitude"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txtImageFilePath2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:textColor="#000"
+        android:layout_below="@id/txtImageFilePath1"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txtVideoFilePath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:textColor="#000"
+        android:layout_below="@id/txtImageFilePath2"
+        android:layout_centerHorizontal="true" />
+
 
 
     <androidx.appcompat.widget.AppCompatButton

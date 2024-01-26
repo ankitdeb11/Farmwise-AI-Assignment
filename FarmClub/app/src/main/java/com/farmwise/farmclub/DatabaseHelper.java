@@ -27,6 +27,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
 
+    //for camera and video paths
+    private static final String COLUMN_IMAGE_PATH_1 = "image_path_1";
+    private static final String COLUMN_IMAGE_PATH_2 = "image_path_2";
+    private static final String COLUMN_VIDEO_PATH = "video_path";
+
+    private static final String DEFAULT_IMAGE_PATH = "";
+    private static final String DEFAULT_VIDEO_PATH = "";
+
     // creating table query
     private static final String CREATE_TABLE_FARMERS = "CREATE TABLE " + TABLE_FARMERS + " (" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -36,7 +44,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_GENDER + " TEXT, " +
             COLUMN_LAND_AREA + " TEXT, " +
             COLUMN_LATITUDE + " REAL, " + // REAL is used for double values
-            COLUMN_LONGITUDE + " REAL);"; // REAL is used for double values
+            COLUMN_LONGITUDE + " REAL, " +
+            COLUMN_IMAGE_PATH_1 + " TEXT, " +
+            COLUMN_IMAGE_PATH_2 + " TEXT, " +
+            COLUMN_VIDEO_PATH + " TEXT);";
+
 
 
     public DatabaseHelper(Context context) {
@@ -47,6 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // creating the table
         db.execSQL(CREATE_TABLE_FARMERS);
+        Log.d("DatabaseHelper", "Table created successfully.");
     }
 
     @Override
@@ -59,24 +72,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    public long insertFarmerData(String name, String address, String dob, String gender, String landArea, double latitude, double longitude) {
+    public long insertFarmerData(String name, String address, String dob, String gender,
+                                 String landArea, double latitude, double longitude,
+                                 String imagePath1, String imagePath2, String videoPath) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        long result = -1;  // Initialize with a default value
 
-        values.put(COLUMN_NAME, name);
-        values.put(COLUMN_ADDRESS, address);
-        values.put(COLUMN_DOB, dob);
-        values.put(COLUMN_GENDER, gender);
-        values.put(COLUMN_LAND_AREA, landArea);
-        values.put(COLUMN_LATITUDE, latitude);
-        values.put(COLUMN_LONGITUDE, longitude);
+        try {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_NAME, name);
+            values.put(COLUMN_ADDRESS, address);
+            values.put(COLUMN_DOB, dob);
+            values.put(COLUMN_GENDER, gender);
+            values.put(COLUMN_LAND_AREA, landArea);
+            values.put(COLUMN_LATITUDE, latitude);
+            values.put(COLUMN_LONGITUDE, longitude);
+            values.put(COLUMN_IMAGE_PATH_1, imagePath1);
+            values.put(COLUMN_IMAGE_PATH_2, imagePath2);
+            values.put(COLUMN_VIDEO_PATH, videoPath);
 
-        // inserting Row data
-        long result = db.insert(TABLE_FARMERS, null, values);
-        db.close(); // Closing database connection
+            // Insert the data
+            result = db.insert(TABLE_FARMERS, null, values);
+            Log.d("DatabaseHelper", "Row inserted successfully. Row ID: " + result);
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error inserting data: " + e.getMessage());
+        } finally {
+            // Close the database connection
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
         return result;
     }
-
 
 
 
@@ -152,7 +180,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
 
                 // creating a Farmer object and adding it to the list
-                Farmer farmer = new Farmer(id, name, address, dob, gender, landArea, latitude, longitude);
+                Farmer farmer = new Farmer(id, name, address, dob, gender, landArea, latitude, longitude,
+                        DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH, DEFAULT_VIDEO_PATH);
+
                 farmersList.add(farmer);
 
             } while (cursor.moveToNext());

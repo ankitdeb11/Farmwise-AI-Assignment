@@ -84,6 +84,14 @@ public class DataCollectionActivity extends AppCompatActivity {
     private Uri videoUri;
 
 
+    //third try for camera and video path
+    private String imagePath1;
+    private String imagePath2;
+    private String videoPath;
+
+    private Farmer currentFarmer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +123,9 @@ public class DataCollectionActivity extends AppCompatActivity {
                 // Handle location updates here
             }
         };
+
+
+        currentFarmer = new Farmer(0, "", "", "", "", "", 0.0, 0.0, "", "", "");
 
 
         // setting up gender spinner
@@ -242,8 +253,25 @@ public class DataCollectionActivity extends AppCompatActivity {
             String gender = spinnerGender.getSelectedItem().toString();
             String landArea = editTextLandArea.getText().toString().trim();
 
-            // Saving data to SQLite database with latitude and longitude
-            long result = dbHelper.insertFarmerData(farmerName, address, dob, gender, landArea, latitude, longitude);
+            // Check if image and video paths are not null
+            if (currentFarmer.getImagePath1() == null || currentFarmer.getVideoPath() == null) {
+                Toast.makeText(this, "Please capture both image and video before saving.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Save data to SQLite database with latitude and longitude
+            long result = dbHelper.insertFarmerData(
+                    farmerName,
+                    address,
+                    dob,
+                    gender,
+                    landArea,
+                    latitude,
+                    longitude,
+                    currentFarmer.getImagePath1(),
+                    currentFarmer.getImagePath2(),
+                    currentFarmer.getVideoPath()
+            );
 
             if (result != -1) {
                 Toast.makeText(this, "Farmer data submitted!", Toast.LENGTH_SHORT).show();
@@ -260,6 +288,8 @@ public class DataCollectionActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
 
     @Override
@@ -434,11 +464,14 @@ public class DataCollectionActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Handle image capture result
                 if (currentPhotoPath != null) {
+                    // Update the file path for Image 1
+                    currentFarmer.setImagePath1(currentPhotoPath);
+
                     // Display the captured image using the file path
                     imageViewCapturedImage.setVisibility(View.VISIBLE);
                     Uri photoUri = Uri.parse(currentPhotoPath);
                     imageViewCapturedImage.setImageURI(photoUri);
-                    Toast.makeText(this, "Image captured!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Image 1 captured!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Error retrieving image", Toast.LENGTH_SHORT).show();
                 }
@@ -450,6 +483,10 @@ public class DataCollectionActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             // Handle video capture result
             Uri videoUri = data.getData();
+
+            // Update the file path for Video
+            currentFarmer.setVideoPath(videoUri.toString());
+
             videoViewCapturedVideo.setVisibility(View.VISIBLE);
             videoViewCapturedVideo.setVideoURI(videoUri);
             videoViewCapturedVideo.start();

@@ -55,7 +55,26 @@
         android:text="Longitude" />
 
 
+    <TextView
+        android:id="@+id/txtImageFilePath1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Path of Image 1: " />
 
+    <TextView
+        android:id="@+id/txtImageFilePath2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Path of Image 2: " />
+
+    <TextView
+        android:id="@+id/txtVideoFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Path of Video: " />
 
 
 </LinearLayout>
