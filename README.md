@@ -1,12 +1,16 @@
 ## Farmwise-AI Assignment Submission - Mobile Application Dev ##
 
-App Name: FarmClub
-Android Studio Project Structure -
-compileSDK version: 34
-minSDK version: 26
-targetSDK version: 34
-Android Gradle Plugin version: 8.2.1
-Gradle Version: 8.2
+
+
+- App Name: FarmClub
+- Android Studio Project Structure -
+- compileSDK version: 34
+- minSDK version: 26
+- targetSDK version: 34
+- Android Gradle Plugin version: 8.2.1
+- Gradle Version: 8.2
+
+
 
 
 Features of App:
