@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#8ED562"
+    android:background="@drawable/gradient_main_bg"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -16,9 +16,9 @@
         android:layout_marginBottom="324dp"
         android:background="@drawable/btn_data_collect"
         android:fontFamily="@font/lemon_milk_regular"
-        android:text="Display Data S2"
-        android:textSize="20sp"
+        android:text="@string/display_data_s2"
         android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,11 +35,41 @@
         android:textSize="20sp"
         android:background="@drawable/btn_data_collect"
         android:fontFamily="@font/lemon_milk_regular"
-        android:text="Data Collect S1"
+        android:text="@string/data_collect_s1"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDisplayData" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="83dp"
+        android:contentDescription="companyLogo"
+        android:layout_marginEnd="171dp"
+        android:layout_marginBottom="188dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnDisplayData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/main_logo_rsz_one" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="166dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="166dp"
+        android:layout_marginBottom="160dp"
+        android:fontFamily="@font/butler_extrabold"
+        android:text="@string/farmwiseai"
+        app:layout_constraintBottom_toTopOf="@+id/btnDisplayData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

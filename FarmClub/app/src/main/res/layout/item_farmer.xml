@@ -8,6 +8,7 @@
     <TextView
         android:id="@+id/txtName"
         android:layout_width="match_parent"
+        android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:text="Name: " />
 
@@ -15,36 +16,42 @@
         android:id="@+id/txtAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Address: " />
 
     <TextView
         android:id="@+id/txtDob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="DOB: " />
 
     <TextView
         android:id="@+id/txtGender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Gender: " />
 
     <TextView
         android:id="@+id/txtLandArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Land Area: " />
 
     <TextView
         android:id="@+id/txtLatitude"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Latitude" />
 
     <TextView
         android:id="@+id/txtLongitude"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Longitude" />
 
 

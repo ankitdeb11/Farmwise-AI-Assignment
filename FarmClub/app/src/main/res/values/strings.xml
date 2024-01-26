@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Farmclub</string>
+    <string name="farmwiseai">FarmwiseAI</string>
+    <string name="display_data_s2">Display Data S2</string>
+    <string name="data_collect_s1">Data Collect S1</string>
+    <string name="address">Address</string>
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!-- res/drawable/spinner_background.xml -->
+    <shape xmlns:android="http://schemas.android.com/apk/res/android">
+        <solid android:color="#034A00" /> <!-- Set your custom color here -->
+        <corners android:radius="4dp" /> <!-- Set the corner radius as needed -->
+    </shape>
+
+</selector>

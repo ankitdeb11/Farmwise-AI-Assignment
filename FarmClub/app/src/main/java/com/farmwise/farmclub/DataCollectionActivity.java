@@ -75,8 +75,13 @@ public class DataCollectionActivity extends AppCompatActivity {
     VideoView videoViewCapturedVideo;
 
     //LAT AND LONG
-    private double latitude;
-    private double longitude;
+    double latitude;
+    double longitude;
+
+
+    //try again for image and video link
+    private String currentImagePath;
+    private Uri videoUri;
 
 
     @Override
@@ -299,9 +304,7 @@ public class DataCollectionActivity extends AppCompatActivity {
                 // Specify a file where the camera app should save the image
                 File photoFile = createImageFile();
                 if (photoFile != null) {
-                    Uri photoUri = FileProvider.getUriForFile(this,
-                            "com.farmwise.farmclub.fileprovider",
-                            photoFile);
+                    Uri photoUri = Uri.parse(currentPhotoPath); // Use the saved content:// URI
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
@@ -383,6 +386,8 @@ public class DataCollectionActivity extends AppCompatActivity {
         }
     }
 
+
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
@@ -400,6 +405,14 @@ public class DataCollectionActivity extends AppCompatActivity {
 
         // Save a file path for use with ACTION_VIEW intents
         currentPhotoPath = imageFile.getAbsolutePath();
+
+        // Convert file:// to content:// URI using FileProvider
+        Uri photoUri = FileProvider.getUriForFile(this,
+                "com.farmwise.farmclub.fileprovider",
+                imageFile);
+
+        // Save the content:// URI to be used by the camera intent
+        currentPhotoPath = photoUri.toString();
 
         return imageFile;
     }
@@ -423,7 +436,8 @@ public class DataCollectionActivity extends AppCompatActivity {
                 if (currentPhotoPath != null) {
                     // Display the captured image using the file path
                     imageViewCapturedImage.setVisibility(View.VISIBLE);
-                    imageViewCapturedImage.setImageURI(Uri.parse(currentPhotoPath));
+                    Uri photoUri = Uri.parse(currentPhotoPath);
+                    imageViewCapturedImage.setImageURI(photoUri);
                     Toast.makeText(this, "Image captured!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Error retrieving image", Toast.LENGTH_SHORT).show();
@@ -442,4 +456,7 @@ public class DataCollectionActivity extends AppCompatActivity {
             Toast.makeText(this, "Video captured!", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
 }
