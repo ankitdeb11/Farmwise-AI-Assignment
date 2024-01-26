@@ -17,7 +17,7 @@
         android:autofillHints="Name of Farmer"
         android:textSize="20sp"
         android:textColor="@color/black"
-        android:hint="Farmer's Name"
+        android:hint="Enter farmer's Name: "
         android:inputType="text"
         android:maxLength="50" />
 
@@ -25,7 +25,7 @@
         android:id="@+id/editTextAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/address"
+        android:hint="Enter address:"
         android:autofillHints="printAddress"
         android:textSize="20sp"
         android:textColor="@color/black"
