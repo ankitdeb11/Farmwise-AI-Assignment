@@ -3,6 +3,7 @@
 
 
 - App Name: FarmClub
+- Androiod Studio Hedgehog 2023
 - Android Studio Project Structure -
 - compileSDK version: 34
 - minSDK version: 26
